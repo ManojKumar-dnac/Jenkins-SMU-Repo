@@ -11,9 +11,9 @@ pipeline {
                 git 'https://github.com/ManojKumar-dnac/Git-Practice-Repo.git'
             }
         }
-        stage ('Final Stage') {
+        stage ('Docker Deploy') {
             steps {
-                echo "My Final Stage"
+                sh 'docker run -itd --name cont1 -p 2222:80 nginx'
             }
         }
     }
