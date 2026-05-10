@@ -1,36 +1,1369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AeroPulse Booking Console</title>
+  <style>
+    :root {
+      --ink: #101926;
+      --muted: #657386;
+      --line: #dce4ed;
+      --paper: #ffffff;
+      --wash: #f3f7fb;
+      --blue: #1368d8;
+      --blue-2: #0d4ea7;
+      --teal: #0a988d;
+      --amber: #d88724;
+      --coral: #cf4e4a;
+      --green: #16825a;
+      --shadow: 0 18px 44px rgba(16, 25, 38, 0.16);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #eaf0f6;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .shell {
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(9, 21, 36, 0.78), rgba(9, 21, 36, 0.28) 42%, rgba(234, 240, 246, 1) 82%),
+        url("https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=1800&q=80") center top / cover no-repeat;
+    }
+
+    .topbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 22px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 850;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 46px 22px 28px;
+      color: #fff;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(36px, 5.6vw, 68px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 0 0 22px;
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 650px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .booking-card,
+    .live-card {
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.66);
+    }
+
+    .booking-card {
+      padding: 16px;
+    }
+
+    .segments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .segments button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .segments button.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 44px 1.15fr 0.85fr 0.85fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      outline: none;
+      background: #fff;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(19, 104, 216, 0.65);
+      box-shadow: 0 0 0 4px rgba(19, 104, 216, 0.12);
+    }
+
+    .swap {
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--blue);
+      font-weight: 850;
+    }
+
+    .passenger-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+      align-items: end;
+    }
+
+    .counter-box {
+      min-height: 72px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .counter-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .counter button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7fafc;
+      font-weight: 850;
+    }
+
+    .counter output {
+      font-weight: 850;
+    }
+
+    .search {
+      min-height: 46px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 850;
+      box-shadow: 0 14px 26px rgba(19, 104, 216, 0.28);
+    }
+
+    .search:hover,
+    .select:hover,
+    .pay:hover {
+      background: var(--blue-2);
+    }
+
+    .live-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .live-card h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .clock {
+      display: grid;
+      gap: 4px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f5f8fb;
+      border: 1px solid var(--line);
+    }
+
+    .clock strong {
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .clock span,
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mini-stat {
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 10px;
+      background: #fff;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+
+    .refresh-bar {
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e6edf5;
+    }
+
+    .refresh-bar div {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--blue));
+      transition: width 0.25s ease;
+    }
+
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 22px 22px 46px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 28px rgba(16, 25, 38, 0.07);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2,
+    .panel-head h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .sort {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+    }
+
+    .date-strip {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .date-chip {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 9px 7px;
+      text-align: left;
+    }
+
+    .date-chip.active {
+      border-color: rgba(19, 104, 216, 0.5);
+      background: rgba(19, 104, 216, 0.08);
+    }
+
+    .date-chip strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .date-chip span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .fare-alert {
+      margin: 14px 16px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(10, 152, 141, 0.25);
+      background: rgba(10, 152, 141, 0.08);
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #155f59;
+      font-size: 13px;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(22, 130, 90, 0.45);
+      animation: pulse 1.7s infinite;
+    }
+
+    @keyframes pulse {
+      70% {
+        box-shadow: 0 0 0 9px rgba(22, 130, 90, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(22, 130, 90, 0);
+      }
+    }
+
+    .results {
+      padding: 14px 16px 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .flight {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) 142px;
+      gap: 16px;
+      align-items: center;
+      background: #fff;
+    }
+
+    .airline {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 850;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+    }
+
+    .airline strong {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .airline span,
+    .route-line span,
+    .price span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .route-line {
+      display: grid;
+      grid-template-columns: 72px 1fr 72px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .time strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .track {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .rail {
+      height: 2px;
+      margin: 7px 0;
+      background: linear-gradient(90deg, var(--teal), var(--blue));
+      position: relative;
+    }
+
+    .rail::before,
+    .rail::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border: 2px solid var(--blue);
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: -4px;
+    }
+
+    .rail::before {
+      left: 0;
+    }
+
+    .rail::after {
+      right: 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      min-height: 24px;
+      border-radius: 8px;
+      padding: 4px 7px;
+      background: #f0f4f8;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .tag.green {
+      background: rgba(22, 130, 90, 0.1);
+      color: var(--green);
+    }
+
+    .tag.amber {
+      background: rgba(216, 135, 36, 0.13);
+      color: #9a5a13;
+    }
+
+    .price {
+      display: grid;
+      justify-items: end;
+      gap: 7px;
+      text-align: right;
+    }
+
+    .price strong {
+      font-size: 23px;
+    }
+
+    .trend {
+      font-size: 12px;
+      font-weight: 850;
+      border-radius: 8px;
+      padding: 4px 7px;
+      background: #f0f4f8;
+      color: var(--muted);
+    }
+
+    .trend.down {
+      color: var(--green);
+      background: rgba(22, 130, 90, 0.1);
+    }
+
+    .trend.up {
+      color: #a53732;
+      background: rgba(207, 78, 74, 0.1);
+    }
+
+    .select,
+    .pay {
+      min-height: 38px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 850;
+      padding: 8px 13px;
+    }
+
+    .side {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-body,
+    .ops-body {
+      padding: 14px;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .line-item:last-child {
+      border-bottom: 0;
+    }
+
+    .line-item strong {
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .total {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 16px;
+    }
+
+    .ops-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .ops-row:last-child {
+      border-bottom: 0;
+    }
+
+    .ops-row strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .ops-row span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .status {
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .status.ok {
+      color: var(--green);
+      background: rgba(22, 130, 90, 0.1);
+    }
+
+    .status.warn {
+      color: #9a5a13;
+      background: rgba(216, 135, 36, 0.13);
+    }
+
+    .status.bad {
+      color: #a53732;
+      background: rgba(207, 78, 74, 0.1);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 8px;
+      background: #101926;
+      color: #fff;
+      padding: 11px 14px;
+      box-shadow: 0 12px 28px rgba(16, 25, 38, 0.2);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      font-size: 14px;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1000px) {
+      .hero-grid,
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .nav {
+        display: none;
+      }
+
+      .form-grid,
+      .passenger-row {
+        grid-template-columns: 1fr;
+      }
+
+      .date-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .flight {
+        grid-template-columns: 1fr;
+      }
+
+      .price {
+        justify-items: start;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .route-line {
+        grid-template-columns: 58px 1fr 58px;
+        gap: 8px;
+      }
+
+      .date-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <form class="login-form">
-            <h2>Welcome Back</h2>
-            <p>Please enter your details</p>
-            
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">AP</span>
+        <span>AeroPulse</span>
+      </div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#search">Search</a>
+        <a href="#results">Flights</a>
+        <a href="#summary">Checkout</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="search">
+      <h1>AeroPulse Booking Console</h1>
+      <p>Plan routes, compare flexible fares, track live-style availability, and build an itinerary from one screen.</p>
+
+      <div class="hero-grid">
+        <form class="booking-card" id="bookingForm">
+          <div class="segments" role="tablist" aria-label="Trip type">
+            <button type="button" class="active" data-trip="round">Round trip</button>
+            <button type="button" data-trip="oneway">One way</button>
+            <button type="button" data-trip="openjaw">Open jaw</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="from">From</label>
+              <input id="from" list="airports" value="Mumbai (BOM)" autocomplete="off" />
             </div>
-            
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+            <button class="swap" type="button" id="swap">Swap</button>
+            <div class="field">
+              <label for="to">To</label>
+              <input id="to" list="airports" value="Singapore (SIN)" autocomplete="off" />
             </div>
-            
-            <div class="options">
-                <label><input type="checkbox"> Remember me</label>
-                <a href="#">Forgot password?</a>
+            <div class="field">
+              <label for="depart">Depart</label>
+              <input id="depart" type="date" />
             </div>
-            
-            <button type="submit" class="login-btn">Login</button>
-            
-            <p class="signup-link">Don't have an account? <a href="#">Sign up</a></p>
+            <div class="field" id="returnField">
+              <label for="returnDate">Return</label>
+              <input id="returnDate" type="date" />
+            </div>
+          </div>
+
+          <div class="passenger-row">
+            <div class="counter-box">
+              <span>Adults</span>
+              <div class="counter" data-count="adults">
+                <button type="button" data-step="-1">-</button>
+                <output id="adultsOut">1</output>
+                <button type="button" data-step="1">+</button>
+              </div>
+            </div>
+            <div class="counter-box">
+              <span>Children</span>
+              <div class="counter" data-count="children">
+                <button type="button" data-step="-1">-</button>
+                <output id="childrenOut">0</output>
+                <button type="button" data-step="1">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="cabin">Cabin</label>
+              <select id="cabin">
+                <option>Economy</option>
+                <option>Premium Economy</option>
+                <option>Business</option>
+              </select>
+            </div>
+            <button class="search" type="submit">Find flights</button>
+          </div>
         </form>
-    </div>
+
+        <aside class="live-card" aria-label="Live fare scanner">
+          <h2>Live Fare Scanner</h2>
+          <div class="clock">
+            <strong id="clock">--:--:--</strong>
+            <span id="clockDate">Current booking time</span>
+          </div>
+          <div class="mini-grid">
+            <div class="mini-stat">
+              <strong id="watchers">--</strong>
+              <span>Watching route</span>
+            </div>
+            <div class="mini-stat">
+              <strong id="lowest">INR --</strong>
+              <span>Lowest fare</span>
+            </div>
+          </div>
+          <div>
+            <div class="mini-stat">
+              <strong id="refresh">00:20</strong>
+              <span>Next fare scan</span>
+            </div>
+            <div class="refresh-bar" aria-hidden="true"><div id="refreshFill"></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <main class="main">
+    <section class="panel" id="results">
+      <div class="panel-head">
+        <div>
+          <h2 id="routeTitle">Mumbai to Singapore</h2>
+          <p id="routeMeta">Round trip | 1 traveller | Economy</p>
+        </div>
+        <select class="sort" id="sort">
+          <option value="best">Best value</option>
+          <option value="price">Lowest price</option>
+          <option value="duration">Shortest duration</option>
+          <option value="depart">Earliest departure</option>
+        </select>
+      </div>
+
+      <div class="date-strip" id="dateStrip"></div>
+
+      <div class="fare-alert">
+        <span class="pulse" aria-hidden="true"></span>
+        <span id="fareAlert">Live-style fares will refresh while this page is open.</span>
+      </div>
+
+      <div class="results" id="flightResults"></div>
+    </section>
+
+    <aside class="side">
+      <section class="panel" id="summary">
+        <div class="panel-head">
+          <div>
+            <h3>Trip Summary</h3>
+            <p>Selected fare details</p>
+          </div>
+        </div>
+        <div class="summary-body" id="summaryBody">
+          <div class="empty">Choose a flight to preview the checkout total.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Airport Ops</h3>
+            <p id="opsUpdated">Updated now</p>
+          </div>
+        </div>
+        <div class="ops-body" id="opsBody"></div>
+      </section>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast">Flight selected</div>
+
+  <datalist id="airports">
+    <option value="Mumbai (BOM)"></option>
+    <option value="Singapore (SIN)"></option>
+    <option value="New Delhi (DEL)"></option>
+    <option value="Bengaluru (BLR)"></option>
+    <option value="Dubai (DXB)"></option>
+    <option value="London (LHR)"></option>
+    <option value="Bangkok (BKK)"></option>
+    <option value="Doha (DOH)"></option>
+  </datalist>
+
+  <script>
+    const flights = [
+      { airline: "AeroPulse", code: "AP 611", logo: "AP", depart: "05:45", arrive: "13:55", minutes: 340, stops: 0, aircraft: "A350", price: 18240, bag: "25 kg", meal: "Included" },
+      { airline: "VistaJet Asia", code: "VA 920", logo: "VA", depart: "08:25", arrive: "18:20", minutes: 445, stops: 1, via: "BKK", aircraft: "B787", price: 15480, bag: "20 kg", meal: "Included" },
+      { airline: "Indigo Sky", code: "IS 312", logo: "IS", depart: "11:10", arrive: "21:00", minutes: 440, stops: 1, via: "BLR", aircraft: "A321neo", price: 14210, bag: "20 kg", meal: "Buy on board" },
+      { airline: "JetWave", code: "JW 704", logo: "JW", depart: "15:30", arrive: "23:50", minutes: 350, stops: 0, aircraft: "B787", price: 19890, bag: "25 kg", meal: "Included" },
+      { airline: "AeroPulse", code: "AP 845", logo: "AP", depart: "20:40", arrive: "08:35", minutes: 505, stops: 1, via: "DOH", aircraft: "A330", price: 16360, bag: "30 kg", meal: "Included" }
+    ];
+
+    const airportNames = {
+      BOM: "Mumbai",
+      SIN: "Singapore",
+      DEL: "New Delhi",
+      BLR: "Bengaluru",
+      DXB: "Dubai",
+      LHR: "London",
+      BKK: "Bangkok",
+      DOH: "Doha"
+    };
+
+    const state = {
+      trip: "round",
+      from: "Mumbai (BOM)",
+      to: "Singapore (SIN)",
+      depart: "",
+      returnDate: "",
+      adults: 1,
+      children: 0,
+      cabin: "Economy",
+      selected: null,
+      refreshLeft: 20,
+      refreshWindow: 20,
+      watchers: 82,
+      scanCount: 0,
+      adjustments: {}
+    };
+
+    const els = {
+      form: document.getElementById("bookingForm"),
+      from: document.getElementById("from"),
+      to: document.getElementById("to"),
+      depart: document.getElementById("depart"),
+      returnDate: document.getElementById("returnDate"),
+      returnField: document.getElementById("returnField"),
+      swap: document.getElementById("swap"),
+      cabin: document.getElementById("cabin"),
+      adultsOut: document.getElementById("adultsOut"),
+      childrenOut: document.getElementById("childrenOut"),
+      routeTitle: document.getElementById("routeTitle"),
+      routeMeta: document.getElementById("routeMeta"),
+      sort: document.getElementById("sort"),
+      dateStrip: document.getElementById("dateStrip"),
+      flightResults: document.getElementById("flightResults"),
+      summaryBody: document.getElementById("summaryBody"),
+      clock: document.getElementById("clock"),
+      clockDate: document.getElementById("clockDate"),
+      watchers: document.getElementById("watchers"),
+      lowest: document.getElementById("lowest"),
+      refresh: document.getElementById("refresh"),
+      refreshFill: document.getElementById("refreshFill"),
+      fareAlert: document.getElementById("fareAlert"),
+      opsBody: document.getElementById("opsBody"),
+      opsUpdated: document.getElementById("opsUpdated"),
+      toast: document.getElementById("toast")
+    };
+
+    function money(amount) {
+      return "INR " + Math.round(amount).toLocaleString("en-IN");
+    }
+
+    function airport(value) {
+      const match = value.match(/\(([A-Z]{3})\)/);
+      if (!match) return { code: value.slice(0, 3).toUpperCase(), city: value };
+      return { code: match[1], city: airportNames[match[1]] || value.replace(/\s*\([A-Z]{3}\)/, "") };
+    }
+
+    function addDays(value, days) {
+      const date = new Date(value);
+      date.setDate(date.getDate() + days);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function dateShort(value) {
+      return new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "2-digit", month: "short" }).format(new Date(value + "T00:00:00"));
+    }
+
+    function duration(minutes) {
+      const hours = Math.floor(minutes / 60);
+      return hours + "h " + String(minutes % 60).padStart(2, "0") + "m";
+    }
+
+    function stopText(flight) {
+      if (flight.stops === 0) return "Non-stop";
+      return "1 stop via " + flight.via;
+    }
+
+    function cabinRate() {
+      return { Economy: 1, "Premium Economy": 1.42, Business: 2.75 }[state.cabin];
+    }
+
+    function routeRate() {
+      const to = airport(state.to).code;
+      if (to === "LHR") return 3.2;
+      if (to === "DXB" || to === "DOH") return 1.45;
+      return 1;
+    }
+
+    function liveFlight(flight) {
+      const adjustment = state.adjustments[flight.code] || 0;
+      const childDiscount = state.children * 750;
+      const fare = Math.max(2800, Math.round((flight.price * cabinRate() * routeRate() + adjustment - childDiscount) / 10) * 10);
+      return {
+        ...flight,
+        fare,
+        delta: adjustment,
+        seats: Math.max(2, 14 - state.scanCount - flight.stops * 2 + (flight.code.length % 3)),
+        status: statusFor(flight)
+      };
+    }
+
+    function statusFor(flight) {
+      const statuses = ["On time", "Boarding soon", "Gate watch", "Weather watch", "Final call"];
+      const index = (flights.indexOf(flight) + state.scanCount) % statuses.length;
+      return statuses[index];
+    }
+
+    function statusClass(status) {
+      if (status === "On time" || status === "Boarding soon") return "ok";
+      if (status === "Final call") return "bad";
+      return "warn";
+    }
+
+    function tagClass(status) {
+      if (status === "On time" || status === "Boarding soon") return "green";
+      if (status === "Final call") return "amber";
+      return "";
+    }
+
+    function trendText(delta) {
+      if (delta === 0) return "Stable";
+      return delta > 0 ? money(Math.abs(delta)) + " up" : money(Math.abs(delta)) + " down";
+    }
+
+    function trendClass(delta) {
+      if (delta > 0) return "up";
+      if (delta < 0) return "down";
+      return "";
+    }
+
+    function sortedFlights() {
+      const list = flights.map(liveFlight);
+      if (els.sort.value === "price") list.sort((a, b) => a.fare - b.fare);
+      if (els.sort.value === "duration") list.sort((a, b) => a.minutes - b.minutes);
+      if (els.sort.value === "depart") list.sort((a, b) => a.depart.localeCompare(b.depart));
+      if (els.sort.value === "best") list.sort((a, b) => (a.stops - b.stops) || (a.fare - b.fare));
+      return list;
+    }
+
+    function renderRoute() {
+      const from = airport(state.from);
+      const to = airport(state.to);
+      const travellers = state.adults + state.children;
+      els.routeTitle.textContent = from.city + " to " + to.city;
+      els.routeMeta.textContent = (state.trip === "oneway" ? "One way" : state.trip === "openjaw" ? "Open jaw" : "Round trip") + " | " + travellers + " traveller(s) | " + state.cabin;
+    }
+
+    function renderDates() {
+      els.dateStrip.innerHTML = "";
+      const base = new Date(state.depart + "T00:00:00");
+      const cheapest = Math.min(...flights.map((flight) => liveFlight(flight).fare));
+      for (let index = -2; index <= 4; index += 1) {
+        const value = addDays(base, index);
+        const chip = document.createElement("button");
+        const price = cheapest + Math.abs(index) * 420 + (index > 1 ? 260 : 0);
+        chip.className = "date-chip" + (value === state.depart ? " active" : "");
+        chip.type = "button";
+        chip.innerHTML = `<strong>${dateShort(value)}</strong><span>${money(price)}</span>`;
+        chip.addEventListener("click", () => {
+          state.depart = value;
+          els.depart.value = value;
+          renderAll();
+        });
+        els.dateStrip.appendChild(chip);
+      }
+    }
+
+    function renderFlights() {
+      const from = airport(state.from);
+      const to = airport(state.to);
+      const list = sortedFlights();
+      els.flightResults.innerHTML = "";
+      list.forEach((flight, index) => {
+        const card = document.createElement("article");
+        card.className = "flight";
+        card.innerHTML = `
+          <div class="airline">
+            <span class="logo">${flight.logo}</span>
+            <div>
+              <strong>${flight.airline}</strong>
+              <span>${flight.code} | ${flight.aircraft}</span>
+            </div>
+          </div>
+          <div>
+            <div class="route-line">
+              <div class="time"><strong>${flight.depart}</strong><span>${from.code}</span></div>
+              <div class="track"><span>${duration(flight.minutes)}</span><div class="rail"></div><span>${stopText(flight)}</span></div>
+              <div class="time"><strong>${flight.arrive}</strong><span>${to.code}</span></div>
+            </div>
+            <div class="tags">
+              <span class="tag">${flight.bag} baggage</span>
+              <span class="tag">${flight.meal}</span>
+              <span class="tag">${flight.seats} seats left</span>
+              <span class="tag ${tagClass(flight.status)}">${flight.status}</span>
+            </div>
+          </div>
+          <div class="price">
+            <span>per traveller</span>
+            <strong>${money(flight.fare)}</strong>
+            <span class="trend ${trendClass(flight.delta)}">${trendText(flight.delta)}</span>
+            <button type="button" class="select" data-index="${index}">Select</button>
+          </div>
+        `;
+        els.flightResults.appendChild(card);
+      });
+
+      document.querySelectorAll(".select").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selected = sortedFlights()[Number(button.dataset.index)];
+          renderSummary();
+          showToast("Selected " + state.selected.airline + " " + state.selected.code);
+        });
+      });
+    }
+
+    function renderSummary() {
+      if (!state.selected) {
+        els.summaryBody.innerHTML = `<div class="empty">Choose a flight to preview the checkout total.</div>`;
+        return;
+      }
+      const travellers = state.adults + state.children;
+      const fare = state.selected.fare * travellers;
+      const tax = Math.round(fare * 0.085);
+      const fee = 349;
+      const total = fare + tax + fee;
+      els.summaryBody.innerHTML = `
+        <div class="line-item"><span>Flight</span><strong>${state.selected.airline} ${state.selected.code}</strong></div>
+        <div class="line-item"><span>Date</span><strong>${dateShort(state.depart)}</strong></div>
+        <div class="line-item"><span>Cabin</span><strong>${state.cabin}</strong></div>
+        <div class="line-item"><span>Travellers</span><strong>${travellers}</strong></div>
+        <div class="line-item"><span>Status</span><strong>${state.selected.status}</strong></div>
+        <div class="line-item"><span>Airfare</span><strong>${money(fare)}</strong></div>
+        <div class="line-item"><span>Taxes</span><strong>${money(tax)}</strong></div>
+        <div class="line-item"><span>Platform fee</span><strong>${money(fee)}</strong></div>
+        <div class="line-item total"><span>Total</span><strong>${money(total)}</strong></div>
+        <button class="pay" type="button" id="payButton">Continue to payment</button>
+      `;
+      document.getElementById("payButton").addEventListener("click", () => showToast("Payment step prepared for " + state.selected.code));
+    }
+
+    function renderOps() {
+      const from = airport(state.from);
+      const to = airport(state.to);
+      const gates = ["A4", "B12", "C7", "D2", "E9"];
+      els.opsBody.innerHTML = flights.slice(0, 4).map((flight, index) => {
+        const live = liveFlight(flight);
+        const gate = gates[(index + state.scanCount) % gates.length];
+        return `
+          <div class="ops-row">
+            <div>
+              <strong>${flight.code} ${from.code}-${to.code}</strong>
+              <span>Gate ${gate} | ${flight.depart} | ${flight.aircraft}</span>
+            </div>
+            <div class="status ${statusClass(live.status)}">${live.status}</div>
+          </div>
+        `;
+      }).join("");
+      els.opsUpdated.textContent = "Updated " + new Intl.DateTimeFormat("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }).format(new Date());
+    }
+
+    function renderLiveStats() {
+      const list = sortedFlights();
+      const low = list.reduce((best, flight) => flight.fare < best.fare ? flight : best, list[0]);
+      const mins = Math.floor(state.refreshLeft / 60);
+      const secs = state.refreshLeft % 60;
+      els.watchers.textContent = state.watchers.toLocaleString("en-IN");
+      els.lowest.textContent = money(low.fare);
+      els.refresh.textContent = String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+      els.refreshFill.style.width = Math.max(0, state.refreshLeft / state.refreshWindow * 100) + "%";
+    }
+
+    function renderClock() {
+      const now = new Date();
+      els.clock.textContent = new Intl.DateTimeFormat("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }).format(now);
+      els.clockDate.textContent = new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }).format(now) + " IST";
+    }
+
+    function renderAll() {
+      renderRoute();
+      renderDates();
+      renderFlights();
+      renderOps();
+      renderLiveStats();
+      if (state.selected) {
+        const current = flights.find((flight) => flight.code === state.selected.code);
+        state.selected = current ? liveFlight(current) : null;
+        renderSummary();
+      }
+    }
+
+    function scanMarket() {
+      const moves = [-340, -180, -80, 0, 120, 260, 420];
+      flights.forEach((flight) => {
+        const current = state.adjustments[flight.code] || 0;
+        const next = current + moves[Math.floor(Math.random() * moves.length)];
+        state.adjustments[flight.code] = Math.max(-1100, Math.min(1300, next));
+      });
+      state.scanCount += 1;
+      state.refreshLeft = state.refreshWindow;
+      state.watchers = Math.max(40, state.watchers + Math.floor(Math.random() * 15) - 5);
+      const low = sortedFlights()[0];
+      els.fareAlert.textContent = "Latest scan: " + low.airline + " " + low.code + " is available from " + money(low.fare) + ".";
+      renderAll();
+    }
+
+    function tick() {
+      state.refreshLeft -= 1;
+      if (state.refreshLeft <= 0) {
+        scanMarket();
+        return;
+      }
+      if (state.refreshLeft % 5 === 0) {
+        state.watchers = Math.max(40, state.watchers + Math.floor(Math.random() * 7) - 3);
+      }
+      renderLiveStats();
+    }
+
+    function showToast(text) {
+      els.toast.textContent = text;
+      els.toast.classList.add("show");
+      window.setTimeout(() => els.toast.classList.remove("show"), 2200);
+    }
+
+    function syncFromForm() {
+      state.from = els.from.value.trim();
+      state.to = els.to.value.trim();
+      state.depart = els.depart.value;
+      state.returnDate = els.returnDate.value;
+      state.cabin = els.cabin.value;
+      if (state.returnDate && state.returnDate < state.depart) {
+        state.returnDate = addDays(state.depart + "T00:00:00", 5);
+        els.returnDate.value = state.returnDate;
+      }
+    }
+
+    function setupDates() {
+      const now = new Date();
+      state.depart = addDays(now, 12);
+      state.returnDate = addDays(now, 18);
+      els.depart.min = addDays(now, 0);
+      els.returnDate.min = state.depart;
+      els.depart.value = state.depart;
+      els.returnDate.value = state.returnDate;
+    }
+
+    function bind() {
+      document.querySelectorAll(".segments button").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".segments button").forEach((item) => item.classList.remove("active"));
+          button.classList.add("active");
+          state.trip = button.dataset.trip;
+          const noReturn = state.trip === "oneway";
+          els.returnField.style.opacity = noReturn ? "0.48" : "1";
+          els.returnDate.disabled = noReturn;
+          renderAll();
+        });
+      });
+
+      els.swap.addEventListener("click", () => {
+        const current = els.from.value;
+        els.from.value = els.to.value;
+        els.to.value = current;
+        syncFromForm();
+        renderAll();
+      });
+
+      els.form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        syncFromForm();
+        state.selected = null;
+        renderSummary();
+        renderAll();
+      });
+
+      document.querySelectorAll(".counter").forEach((counter) => {
+        counter.addEventListener("click", (event) => {
+          const button = event.target.closest("button");
+          if (!button) return;
+          const key = counter.dataset.count;
+          const min = key === "adults" ? 1 : 0;
+          state[key] = Math.max(min, Math.min(9, state[key] + Number(button.dataset.step)));
+          els.adultsOut.textContent = state.adults;
+          els.childrenOut.textContent = state.children;
+          renderAll();
+        });
+      });
+
+      els.cabin.addEventListener("change", () => {
+        syncFromForm();
+        renderAll();
+      });
+
+      els.sort.addEventListener("change", renderFlights);
+
+      [els.from, els.to, els.depart, els.returnDate].forEach((input) => {
+        input.addEventListener("change", () => {
+          syncFromForm();
+          renderAll();
+        });
+      });
+    }
+
+    setupDates();
+    bind();
+    syncFromForm();
+    renderClock();
+    renderSummary();
+    renderAll();
+    window.setInterval(renderClock, 1000);
+    window.setInterval(tick, 1000);
+  </script>
 </body>
 </html>
