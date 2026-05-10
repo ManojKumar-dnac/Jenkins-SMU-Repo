@@ -10,7 +10,7 @@ pipeline {
     stage ('Code Pull') {
       steps {
         echo 'This is the second stage to clone the code from GITHUB'
-        git clone 'https://github.com/ManojKumar-dnac/Jenkins-SMU-Repo.git'
+        sh 'git clone https://github.com/ManojKumar-dnac/Jenkins-SMU-Repo.git'
       }
     }
     stage ('DOCKER IMAGE BUILD') {
