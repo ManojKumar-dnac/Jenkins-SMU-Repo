@@ -13,7 +13,7 @@ pipeline {
         }
         stage ('Docker Deploy') {
             steps {
-                sh 'docker run -itd --name cont1 -p 2222:80 nginx'
+                sh 'docker run -itd --name cont1 -p $PORT_NUMBER:80 nginx'
             }
         }
     }
