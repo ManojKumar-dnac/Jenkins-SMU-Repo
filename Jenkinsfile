@@ -19,17 +19,18 @@ pipeline {
         sh 'git build -t $GIT_IMAGE_NAME .'
       }
     }
-    steps {
+    stage ('DOCKER IMAGE PUSH TO DOCKERHUB') {
+      steps {
         withCredentials([usernamePassword(
             credentialsId: 'dockerhub-creds',
             usernameVariable: 'DOCKER_USER',
             passwordVariable: 'DOCKER_PASS'
         )]) {
-            sh '''
-                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            '''
+          sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
         }
+      }
     }
+    
     stage ('DOCKER IMAGE DEPLOY') {
       steps {
         echo 'This is the 4th stage where Docker image creation'
