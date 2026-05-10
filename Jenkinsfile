@@ -1,39 +1,64 @@
 pipeline {
   agent any
+
   stages {
-    stage ('Initial Cleanup') {
+    stage('Initial Cleanup') {
       steps {
         echo 'This is Initial Cleanup'
         deleteDir()
       }
     }
-    stage ('Code Pull') {
+
+    stage('Code Pull') {
       steps {
-        echo 'This is the second stage to clone the code from GITHUB'
-        sh 'git clone https://github.com/ManojKumar-dnac/Jenkins-SMU-Repo.git'
+        echo 'Cloning code from GitHub'
+        git branch: 'main', url: 'https://github.com/ManojKumar-dnac/Jenkins-SMU-Repo.git'
       }
     }
-    stage ('DOCKER IMAGE BUILD') {
+
+    stage('Docker Image Build') {
       steps {
-        echo 'This is the 3rd stage where Docker image build using //Docker file from the repo'
-        sh 'docker build -t $GIT_IMAGE_NAME .'
+        echo 'Building Docker image'
+        sh "docker build -t ${params.GIT_IMAGE_NAME}:latest ."
       }
     }
-    steps {
+
+    stage('Docker Login') {
+      steps {
         withCredentials([usernamePassword(
-            credentialsId: 'dockerhub-creds',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
+          credentialsId: 'dockerhub-creds',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
         )]) {
-            sh '''
-                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            '''
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+          '''
         }
+      }
     }
-    stage ('DOCKER IMAGE DEPLOY') {
+
+    stage('Docker Image Tag') {
       steps {
-        echo 'This is the 4th stage where Docker image creation'
-        sh 'docker run -itd --name $CONT_NAME -p $PORT_NUM:80 $GIT_IMAGE_NAME'
+        sh "docker tag ${params.GIT_IMAGE_NAME}:latest ${params.DOCKER_USER_NAME}/${params.GIT_IMAGE_NAME}:latest"
+      }
+    }
+
+    stage('Docker Image Push') {
+      steps {
+        sh "docker push ${params.DOCKER_USER_NAME}/${params.GIT_IMAGE_NAME}:latest"
+      }
+    }
+
+    stage('Remove Old Container') {
+      steps {
+        sh "docker rm -f ${params.CONT_NAME} || true"
+      }
+    }
+
+    stage('Docker Container Deploy') {
+      steps {
+        echo 'Running Docker container'
+        sh "docker run -d --name ${params.CONT_NAME} -p ${params.PORT_NUM}:80 ${params.GIT_IMAGE_NAME}:latest"
       }
     }
   }
